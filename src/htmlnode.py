@@ -19,7 +19,7 @@ class HTMLNode:
         tag: str = None,
         value: str = None,
         children: list["HTMLNode"] = [],
-        props: dict = None,
+        props: dict = None,  # maybe this should be an empty string?
     ):
         self.tag = tag
         self.value = value
@@ -34,6 +34,36 @@ class HTMLNode:
         raise NotImplementedError
 
     def props_to_html(self):
+        """
+        Returns props as HTML formatted string.
+        Example:
+            input: {'class':'some-container-class'}
+            output:  class="some-container-class"
+        """
         return functools.reduce(
             lambda i, j: i + f' {j[0]}="{j[1]}"', self.props.items(), ""
         )
+
+
+class LeafNode(HTMLNode):
+    """This class represents a HTML node with no children"""
+
+    def __init__(
+        self,
+        tag: str,
+        value: str | None,
+        props: dict = None,
+    ):
+        super().__init__(tag, value, props=props)
+
+    def to_html(self):
+        """Renders a LeafNode as HTML string or raw string if tag is not present"""
+        if not self.value:
+            raise ValueError("LeafNode must have a value.")
+        if not self.tag:
+            return self.value
+        return f"<{self.tag}{self.props_to_html() if self.props else ''}>{self.value}</{self.tag}>"
+
+
+# LeafNode("p", "This is a paragraph of text.").to_html()
+# "<p>This is a paragraph of text.</p>"

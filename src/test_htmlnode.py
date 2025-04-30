@@ -2,7 +2,7 @@
 
 import unittest
 
-from htmlnode import HTMLNode
+from htmlnode import HTMLNode, LeafNode
 
 
 class TestHTMLNode(unittest.TestCase):
@@ -40,6 +40,35 @@ class TestHTMLNode(unittest.TestCase):
 
     def test_to_html(self):
         self.assertRaises(NotImplementedError, self.node.to_html)
+
+
+class TestLeafNode(unittest.TestCase):
+    def setUp(self):
+        self.leaf_node = LeafNode("a", "Click me!", {"href": "https://www.google.com"})
+
+    def test_init(self):
+        self.assertEqual(self.leaf_node.tag, "a")
+        self.assertEqual(self.leaf_node.value, "Click me!")
+        self.assertEqual(self.leaf_node.children, [])
+        self.assertEqual(self.leaf_node.props, {"href": "https://www.google.com"})
+
+    def test_init_required_values(self):
+        with self.assertRaises(TypeError):
+            self.leaf_node_empty = LeafNode()
+
+    def test_to_html(self):
+        self.assertEqual(
+            self.leaf_node.to_html(), '<a href="https://www.google.com">Click me!</a>'
+        )
+
+    def test_to_html_no_tag(self):
+        self.leaf_node.tag = None
+        self.assertEqual(self.leaf_node.to_html(), "Click me!")
+
+    def test_to_html_no_value(self):
+        self.leaf_node.value = None
+        with self.assertRaises(ValueError):
+            self.leaf_node.to_html()
 
 
 if __name__ == "__main__":
