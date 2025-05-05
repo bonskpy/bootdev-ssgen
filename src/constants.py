@@ -27,47 +27,10 @@ An image in a code block: `![Code image](code.jpg)`
 An image as part of a list item: - ![List image](list.png)
 """
 
+
 EXAMPLES_LINKS = r"""
 [An example](https://example.com)
-[Link with a title](https://example.com "Title text")
 [Another link](http://www.example.org/path)
 [FTP link](ftp://user:password@example.net:21/file.txt)
 [Link with no protocol](www.example.co.uk)
-[Link in parentheses]( (https://sub.example.info) )
-This line has [an inline link](https://one.example/page) in it.
-Here's a reference link: [a reference][ref1]
-
-[ref1]: https://reference.example.com
-[Another reference link][ref2] with surrounding text.
-
-[ref2]: http://anothersite.example/
-[Link with query parameters](https://example.com/search?q=test&lang=en)
-[Link with anchor/fragment](https://example.com/page#section-1)
-[Link with both query and fragment](https://example.com/item?id=123#details)
-[Link with special characters in text](http://pl.wikipedia.org/wiki/Prawo_Lewisa-Mogridge’a)
-[Link with spaces in text](https://example.com/spaced%20url)
-[Mailto link](mailto:test@example.com)
-[Angle bracket link](<https://special.example.gov>)
-
-
-This is just plain text with no link.
-Just some brackets and parentheses: []()
-Missing URL: [Link text]()
-Missing link text: [](https://example.com)
-Incomplete link syntax: [Link text]
-Another incomplete link syntax: (https://example.com)
-Link syntax with extra brackets: [[Link text](https://example.com)]
-Link syntax with extra parentheses: ([Link text](https://example.com))
-Text resembling link syntax but with a space in the bracket-parenthesis: [Link text] (https://example.com)
-Text resembling link syntax but with a space in the opening bracket: [ Link text](https://example.com)
-Text resembling link syntax but with a space in the closing parenthesis: [Link text](https://example.com )
-An image: ![Image alt](image.jpg)
-Image syntax that looks like a link: ![Alt text](https://image.example.com)
-A reference link definition without a corresponding inline link: [ref3]: http://unused.example.com
-Just a bracketed word: [word]
-Just a parenthesized URL: (https://example.com)
-A URL in plain text: https://justanurl.com
-A file path: C:\Users\User\Documents\file.md
-Relative path: ../another/page.html
-Link in a code block: `[Code link](https://code.example.com)`
-Link as part of image alt text: ![Link in alt [text](url)](image.png)"""
+This line has [an inline link](https://one.example/page) in it."""

@@ -1,7 +1,14 @@
 import unittest
 
 from htmlnode import LeafNode
-from textnode import TextNode, TextType, split_nodes_delimiter, text_node_to_html_node
+from textnode import (
+    TextNode,
+    TextType,
+    split_nodes_delimiter,
+    split_nodes_image,
+    split_nodes_link,
+    text_node_to_html_node,
+)
 
 
 class TestTextNode(unittest.TestCase):
@@ -193,6 +200,47 @@ class TestSplitNodesDelimiter(unittest.TestCase):
         self.node_text_code.text = "This is a `bad`` syntax"
         with self.assertRaises(Exception):
             split_nodes_delimiter(self.node_text_code, "`", TextType.CODE)
+
+
+class TestSplitNodesLink(unittest.TestCase):
+    def test_split_links(self):
+        node = TextNode(
+            "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)",
+            TextType.NORMAL,
+        )
+        new_nodes = split_nodes_link([node])
+        self.assertListEqual(
+            [
+                TextNode("This is text with a link ", TextType.NORMAL),
+                TextNode("to boot dev", TextType.LINK, "https://www.boot.dev"),
+                TextNode(" and ", TextType.NORMAL),
+                TextNode(
+                    "to youtube", TextType.LINK, "https://www.youtube.com/@bootdotdev"
+                ),
+            ],
+            new_nodes,
+        )
+
+
+class TestSplitNodesImage(unittest.TestCase):
+    def test_split_images(self):
+        node = TextNode(
+            "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another ![second image](https://i.imgur.com/3elNhQu.png)",
+            TextType.NORMAL,
+        )
+
+        new_nodes = split_nodes_image([node])
+        self.assertListEqual(
+            [
+                TextNode("This is text with an ", TextType.NORMAL),
+                TextNode("image", TextType.IMG, "https://i.imgur.com/zjjcJKZ.png"),
+                TextNode(" and another ", TextType.NORMAL),
+                TextNode(
+                    "second image", TextType.IMG, "https://i.imgur.com/3elNhQu.png"
+                ),
+            ],
+            new_nodes,
+        )
 
 
 if __name__ == "__main__":

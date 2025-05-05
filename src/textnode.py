@@ -1,6 +1,8 @@
+import re
 from enum import Enum
 from typing import Optional
 
+import extract
 import htmlnode
 
 
@@ -70,7 +72,7 @@ def text_node_to_html_node(text_node: TextNode) -> htmlnode.LeafNode:
 
 def split_nodes_delimiter(
     old_nodes: list[TextNode], delimiter: str, text_type: TextType
-):
+) -> list[TextNode]:
     """
     Splits TextNode to a list of nodes separated with delimiter according to Markdown syntax
     Does not support nested delimiters
@@ -109,9 +111,44 @@ def split_nodes_delimiter(
     return result
 
 
-def split_nodes_image(old_nodes: TextNode) -> TextNode:
-    pass
+def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
+    result = []
+    img_pattern = re.compile(r"(!\[[^\[\]]*\]\([^\(\)]*\))")  # link pattern
+
+    for node in old_nodes:
+        node_parts = img_pattern.split(node.text)
+        print(node_parts)
+
+        for part in node_parts:
+            # do not add an empty node to the result list
+            if not part:
+                continue
+            if img_pattern.match(part):
+                # extract markdown returns a list of tuples
+                anchor, url = extract.extract_markdown_images(part)[0]
+                result.append(TextNode(anchor, TextType.IMG, url))
+            else:
+                result.append(TextNode(text=part, text_type=TextType.NORMAL))
+
+    return result
 
 
-def split_nodes_link(old_nodes: TextNode) -> TextNode:
-    pass
+def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
+    result = []
+    link_pattern = re.compile(r"(\[[^\]]+]\([^)]+\))")  # link pattern
+
+    for node in old_nodes:
+        node_parts = link_pattern.split(node.text)
+
+        for part in node_parts:
+            # do not add an empty node to the result list
+            if not part:
+                continue
+            if link_pattern.match(part):
+                # extract markdown returns a list of tuples
+                label, url = extract.extract_markdown_links(part)[0]
+                result.append(TextNode(label, TextType.LINK, url))
+            else:
+                result.append(TextNode(text=part, text_type=TextType.NORMAL))
+
+    return result
