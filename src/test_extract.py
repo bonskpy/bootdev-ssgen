@@ -51,3 +51,7 @@ class TestExtractMarkdownLinks(unittest.TestCase):
         ]
 
         self.assertEqual(matches, expected_matches)
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -272,6 +272,49 @@ class TextTextToMarkdown(unittest.TestCase):
         expected = []
         self.assertEqual(text_to_textnodes(markdown_text), expected)
 
+    def test_no_markdown_syntax(self):
+        markdown_text = "This is a text with no markdown syntax"
+        expected = [TextNode(markdown_text, TextType.NORMAL, None)]
+        self.assertEqual(text_to_textnodes(markdown_text), expected)
+
+    def test_unmatched_delimiters(self):
+        markdown_text = "This is a text with *unmatched delimiters**"
+        with self.assertRaises(Exception):
+            text_to_textnodes(markdown_text)
+
+    def test_adjacent_markdown(self):
+        markdown_text = "**bold****bold again**"
+        expected = [
+            TextNode("bold", TextType.BOLD, None),
+            TextNode("bold again", TextType.BOLD, None),
+        ]
+        self.assertEqual(text_to_textnodes(markdown_text), expected)
+
+    # Requires rework
+
+    # def test_empty_link_image(self):
+    #     markdown_text = "This is a [link]() and an ![image]()."
+    #     expected = [
+    #         TextNode("This is a [link]() and an ![image]().", TextType.NORMAL, None),
+    #     ]
+    #     self.assertEqual(text_to_textnodes(markdown_text), expected)
+
+    # def test_special_characters_preservance(self):
+    #     markdown_text = "This is **bold** with special characters like * and _."
+    #     expected = [
+    #         TextNode("This is ", TextType.NORMAL, None),
+    #         TextNode("bold", TextType.BOLD, None),
+    #         TextNode(" with special characters like * and _.", TextType.NORMAL, None),
+    #     ]
+    #     self.assertEqual(text_to_textnodes(markdown_text), expected)
+
+    # def test_delimiters_only(self):
+    #     markdown_text = "**_`"
+    #     expected = [
+    #         TextNode("**_`", TextType.NORMAL, None),
+    #     ]
+    #     self.assertEqual(text_to_textnodes(markdown_text), expected)
+
 
 if __name__ == "__main__":
     unittest.main()
